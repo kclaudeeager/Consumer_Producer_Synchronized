@@ -37,7 +37,6 @@ public class Main extends Thread{
                 while (true) {
                     System.out.println("\t\t\tConsumer consumed " + buffer.Consume());
                     Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
-                    Main.isBufferFull.setValue(false);
                     Thread.sleep((int)(R.MIN_TIME+(Math.random() * 10000)));
                     Main.consumerStatus.setValue(R.CONSUMER_WAIT);
                 }
@@ -56,13 +55,13 @@ public class Main extends Thread{
                 while (true) {
                     System.out.println("Producer produces " + i);
                     Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
-                    Main.isBufferFull.setValue(true);
 
                     buffer.Produce(i++); // Add a value to the buffer
 
                     // Put the thread into sleep
-                    Thread.sleep((int)(R.MIN_TIME+(Math.random() * 10000)));
+                    Thread.sleep((int)((Math.random() * 10000)));
                     Main.producerStatus.setValue(R.PRODUCER_WAIT);
+                    Main.isBufferFull.setValue(true);
                 }
             }
             catch (InterruptedException ex) {
@@ -129,9 +128,14 @@ public class Main extends Thread{
                     Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
                 }
                 value = queue.remove();
+                if(producerStatus.getValue() == R.PRODUCER_WAIT){
+                    Main.isBufferFull.setValue(true);
+                }
+                else {
+                    Main.isBufferFull.setValue(false);
+                }
 
                 notFull.signal(); // Signal notFull condition
-                Main.isBufferFull.setValue(false);
                 Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
             }
             catch (InterruptedException ex) {
