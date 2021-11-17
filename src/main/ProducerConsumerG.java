@@ -88,7 +88,7 @@ public class ProducerConsumerG extends Application {
         launch(args);
     }
     public void updateToProduceEmptyWait(){
-        ImageView produceEmptyWait = new ImageView(new Image("produce_empty_wait.png"));
+        ImageView produceEmptyWait = new ImageView(new Image("images/produce_empty_wait.png"));
         produceEmptyWait.setFitHeight(height);
         produceEmptyWait.setFitWidth(width);
         Platform.runLater(new Runnable() {
@@ -101,7 +101,7 @@ public class ProducerConsumerG extends Application {
 
     }
     public void updateToProduceEmptyConsume(){
-        ImageView produceEmptyWait = new ImageView(new Image("produce_empty_consume.png"));
+        ImageView produceEmptyWait = new ImageView(new Image("images/produce_empty_consume.png"));
         produceEmptyWait.setFitHeight(height);
         produceEmptyWait.setFitWidth(width);
         Platform.runLater(new Runnable() {
@@ -114,7 +114,7 @@ public class ProducerConsumerG extends Application {
 
     }
     public void updateToProduceFullConsume(){
-        ImageView produceEmptyWait = new ImageView(new Image("produce_full_consume.png"));
+        ImageView produceEmptyWait = new ImageView(new Image("images/produce_full_consume.png"));
         produceEmptyWait.setFitHeight(height);
         produceEmptyWait.setFitWidth(width);
         Platform.runLater(new Runnable() {
@@ -127,7 +127,7 @@ public class ProducerConsumerG extends Application {
 
     }
     public void updateToWaitFullConsume(){
-        ImageView produceEmptyWait = new ImageView(new Image("wait_full_consume.png"));
+        ImageView produceEmptyWait = new ImageView(new Image("images/wait_full_consume.png"));
         produceEmptyWait.setFitHeight(height);
         produceEmptyWait.setFitWidth(width);
         Platform.runLater(new Runnable() {
@@ -140,7 +140,7 @@ public class ProducerConsumerG extends Application {
 
     }
     public void updateToNotProduceFullConsume(){
-        ImageView produceEmptyWait = new ImageView(new Image("notProduce_full_consume.png"));
+        ImageView produceEmptyWait = new ImageView(new Image("images/notProduce_full_consume.png"));
         produceEmptyWait.setFitHeight(height);
         produceEmptyWait.setFitWidth(width);
         Platform.runLater(new Runnable() {
