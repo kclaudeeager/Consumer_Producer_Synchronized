@@ -1,5 +1,7 @@
 package main;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,9 +16,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Kwizera
  */
 public class Main extends Thread{
-    ProducerConsumerG design;
     public static Buffer buffer = new Buffer();
-    public static StringProperty gStatus = new SimpleStringProperty("");
+    public static StringProperty consumerStatus = new SimpleStringProperty(R.CONSUMER_WAIT);
+    public static StringProperty producerStatus = new SimpleStringProperty(R.PRODUCER_PRODUCES);
+    public static BooleanProperty isBufferFull = new SimpleBooleanProperty(false);
 
 
     @Override
@@ -33,7 +36,10 @@ public class Main extends Thread{
             try {
                 while (true) {
                     System.out.println("\t\t\tConsumer consumed " + buffer.Consume());
-                    Thread.sleep((int)(Math.random() * 10000));
+                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
+                    Main.isBufferFull.setValue(false);
+                    Thread.sleep((int)(R.MIN_TIME+(Math.random() * 10000)));
+                    Main.consumerStatus.setValue(R.CONSUMER_WAIT);
                 }
             }
             catch (InterruptedException ex) {
@@ -49,11 +55,14 @@ public class Main extends Thread{
 
                 while (true) {
                     System.out.println("Producer produces " + i);
+                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
+                    Main.isBufferFull.setValue(true);
 
                     buffer.Produce(i++); // Add a value to the buffer
 
                     // Put the thread into sleep
-                    Thread.sleep((int)(Math.random() * 10000));
+                    Thread.sleep((int)(R.MIN_TIME+(Math.random() * 10000)));
+                    Main.producerStatus.setValue(R.PRODUCER_WAIT);
                 }
             }
             catch (InterruptedException ex) {
@@ -86,8 +95,12 @@ public class Main extends Thread{
             try {
 
                 while (queue.size() == CAPACITY) {
+
                     System.out.println("Wait for notFull condition");
+                    Main.producerStatus.setValue(R.PRODUCER_WAIT);
+                    Main.isBufferFull.setValue(true);
                     notFull.await();
+                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
                 }
 
 
@@ -109,12 +122,17 @@ public class Main extends Thread{
                 while (queue.isEmpty()) {
 
                     System.out.println("\t\t\tWait for notEmpty condition");
+                    Main.consumerStatus.setValue(R.CONSUMER_WAIT);
 
                     notEmpty.await();
+                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
+                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
                 }
                 value = queue.remove();
 
                 notFull.signal(); // Signal notFull condition
+                Main.isBufferFull.setValue(false);
+                Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
             }
             catch (InterruptedException ex) {
                 ex.printStackTrace();
@@ -125,8 +143,7 @@ public class Main extends Thread{
             }
         }
     }
-    public  Main(ProducerConsumerG design){
-        this.design = design;
+    public  Main(){
 
     }
 }
