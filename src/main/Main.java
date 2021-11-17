@@ -20,7 +20,7 @@ public class Main extends Thread{
     public static StringProperty consumerStatus = new SimpleStringProperty(R.CONSUMER_WAIT);
     public static StringProperty producerStatus = new SimpleStringProperty(R.PRODUCER_PRODUCES);
     public static BooleanProperty isBufferFull = new SimpleBooleanProperty(false);
-
+    public static ProducerConsumerG producerConsumerG;
 
     @Override
     public void run() {
@@ -35,9 +35,11 @@ public class Main extends Thread{
         public void run() {
             try {
                 while (true) {
-                    System.out.println("\t\t\tConsumer consumed " + buffer.Consume());
+                    int i = buffer.Consume();
+                    System.out.println("\t\t\tConsumer consumed " + i);
+                    Main.producerConsumerG.changeConsumerMessage("Consumer consumed " + i);
                     Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
-                    Thread.sleep((int)(R.MIN_TIME+(Math.random() * 10000)));
+                    Thread.sleep((int)((Math.random() * 10000)));
                     Main.consumerStatus.setValue(R.CONSUMER_WAIT);
                 }
             }
@@ -54,6 +56,7 @@ public class Main extends Thread{
 
                 while (true) {
                     System.out.println("Producer produces " + i);
+                    Main.producerConsumerG.changeProducerMessage("Producer produces" + i);
                     Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
 
                     buffer.Produce(i++); // Add a value to the buffer
@@ -96,6 +99,8 @@ public class Main extends Thread{
                 while (queue.size() == CAPACITY) {
 
                     System.out.println("Wait for notFull condition");
+                    Main.producerConsumerG.changeProducerMessage("Wait for notFull condition");
+
                     Main.producerStatus.setValue(R.PRODUCER_WAIT);
                     Main.isBufferFull.setValue(true);
                     notFull.await();
@@ -121,6 +126,8 @@ public class Main extends Thread{
                 while (queue.isEmpty()) {
 
                     System.out.println("\t\t\tWait for notEmpty condition");
+                    Main.producerConsumerG.changeConsumerMessage("Wait for notEmpty condition");
+
                     Main.consumerStatus.setValue(R.CONSUMER_WAIT);
 
                     notEmpty.await();
@@ -147,7 +154,8 @@ public class Main extends Thread{
             }
         }
     }
-    public  Main(){
+    public  Main(ProducerConsumerG producerConsumerG){
+        this.producerConsumerG = producerConsumerG;
 
     }
 }

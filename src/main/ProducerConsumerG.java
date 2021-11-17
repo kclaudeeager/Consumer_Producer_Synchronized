@@ -4,10 +4,14 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -16,6 +20,9 @@ public class ProducerConsumerG extends Application {
     private Scene scene;
 
     private Main main;
+    private Label producerLabel = new Label("producer");
+    private Label consumerLabel = new Label("consumerLabel");
+    private StackPane gPane ;
 
     int width = 1200;
     int height = 533;
@@ -23,13 +30,29 @@ public class ProducerConsumerG extends Application {
     @Override
     public void start(Stage primaryStage) {
         bar = new StackPane();
-        scene = new Scene(bar);
+        gPane = new StackPane();
+        bar.getChildren().addAll(producerLabel, consumerLabel);
+
+        StackPane pPane = new StackPane(producerLabel);
+        pPane.setAlignment(Pos.TOP_LEFT);
+        pPane.setPadding(new Insets(0,0,0,20));
+        producerLabel.setFont(Font.font(20));
+        StackPane cPane = new StackPane(consumerLabel);
+        consumerLabel.setFont(Font.font(20));
+        cPane.setAlignment(Pos.TOP_RIGHT);
+
+        cPane.setPadding(new Insets(0,20,0,0));
+        bar.setAlignment(Pos.CENTER);
+        gPane.getChildren().addAll(bar, pPane, cPane);
+
+
+        scene = new Scene(gPane, width, height);
 
         primaryStage.setScene(scene);
         primaryStage.show();
         updateToProduceEmptyWait();
 
-        main = new Main();
+        main = new Main(this);
         main.start();
 
         InvalidationListener listener = new InvalidationListener() {
@@ -125,6 +148,22 @@ public class ProducerConsumerG extends Application {
             public void run() {
                 bar.getChildren().clear();
                 bar.getChildren().add(produceEmptyWait);
+            }
+        });
+    }
+    public void changeConsumerMessage(String newMessage){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                consumerLabel.setText(newMessage);
+            }
+        });
+    }
+    public void changeProducerMessage(String newMessage){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                producerLabel.setText(newMessage);
             }
         });
     }
