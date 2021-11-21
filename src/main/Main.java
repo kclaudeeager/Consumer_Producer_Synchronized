@@ -38,9 +38,9 @@ public class Main extends Thread{
                     int i = buffer.Consume();
                     System.out.println("\t\t\tConsumer consumed " + i);
                     Main.producerConsumerG.changeConsumerMessage("Consumer consumed " + i);
-                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
-                    Thread.sleep((int)((Math.random() * 10000)));
-                    Main.consumerStatus.setValue(R.CONSUMER_WAIT);
+                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME);//changing the consumer status to consuming
+                    Thread.sleep((int)((Math.random() * 10000))); //wait  a bit after consumption
+                    Main.consumerStatus.setValue(R.CONSUMER_WAIT);//changing the consumer status to waiting
                 }
             }
             catch (InterruptedException ex) {
@@ -57,13 +57,13 @@ public class Main extends Thread{
                 while (true) {
                     System.out.println("Producer produces " + i);
                     Main.producerConsumerG.changeProducerMessage("Producer produces" + i);
-                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
+                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);//changing the producer status to producing
 
                     buffer.Produce(i++); // Add a value to the buffer
 
                     // Put the thread into sleep
                     Thread.sleep((int)((Math.random() * 10000)));
-                    Main.producerStatus.setValue(R.PRODUCER_WAIT);
+                    Main.producerStatus.setValue(R.PRODUCER_WAIT);//waiting a bit to waiting
                     Main.isBufferFull.setValue(true);
                 }
             }
@@ -82,8 +82,6 @@ public class Main extends Thread{
     static class Buffer {
         private static final int CAPACITY = 1; // buffer size
         private java.util.LinkedList<Integer> queue = new java.util.LinkedList<>();
-
-
 
         // Create a new lock
         private static Lock lock = new ReentrantLock();
@@ -107,7 +105,6 @@ public class Main extends Thread{
                     Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
                 }
 
-
                 queue.offer(value);
                 notEmpty.signal(); // Signal notEmpty condition
             }
@@ -128,11 +125,11 @@ public class Main extends Thread{
                     System.out.println("\t\t\tWait for notEmpty condition");
                     Main.producerConsumerG.changeConsumerMessage("Wait for notEmpty condition");
 
-                    Main.consumerStatus.setValue(R.CONSUMER_WAIT);
+                    Main.consumerStatus.setValue(R.CONSUMER_WAIT); // change the consumer when the queue is empty
 
                     notEmpty.await();
-                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME);
-                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);
+                    Main.consumerStatus.setValue(R.CONSUMER_CONSUME); // change Consumer status label
+                    Main.producerStatus.setValue(R.PRODUCER_PRODUCES);// change producer status label
                 }
                 value = queue.remove();
                 if(producerStatus.getValue() == R.PRODUCER_WAIT){

@@ -44,10 +44,7 @@ public class ProducerConsumerG extends Application {
         cPane.setPadding(new Insets(0,20,0,0));
         bar.setAlignment(Pos.CENTER);
         gPane.getChildren().addAll(bar, pPane, cPane);
-
-
         scene = new Scene(gPane, width, height);
-
         primaryStage.setScene(scene);
         primaryStage.show();
         updateToProduceEmptyWait();
@@ -60,19 +57,24 @@ public class ProducerConsumerG extends Application {
             public void invalidated(Observable observable) {
 
                 if(Main.producerStatus.getValue() == R.PRODUCER_PRODUCES && Main.consumerStatus.getValue() == R.CONSUMER_CONSUME&& Main.isBufferFull.getValue() == false){
-                    updateToProduceEmptyConsume();
+                    updateToProduceEmptyConsume(); // this calls the function to ulstrate  the image of producer who is producing while the buffer is empty and consumer consuming
+
                 }
                 else if(Main.producerStatus.getValue() ==R.PRODUCER_PRODUCES && Main.consumerStatus.getValue() == R.CONSUMER_WAIT&& Main.isBufferFull.getValue() == false){
-                    updateToProduceEmptyWait();
+                    updateToProduceEmptyWait();// this calls the function to shows the image of producer who is producing while the buffer is empty and consumer waiting
+
                 }
                 else if(Main.producerStatus.getValue() ==R.PRODUCER_PRODUCES  && Main.isBufferFull.getValue() == true && Main.consumerStatus.getValue() == R.CONSUMER_CONSUME){
-                    updateToProduceFullConsume();
+                    updateToProduceFullConsume(); // this calls the function to shows the image of producer who is producing while the buffer is full and consumer consuming
+
                 }
                 else if(Main.producerStatus.getValue() ==R.PRODUCER_WAIT&& Main.isBufferFull.getValue() == true  && Main.consumerStatus.getValue() == R.CONSUMER_CONSUME){
-                    updateToWaitFullConsume();
+                    updateToWaitFullConsume(); // this calls the function to shows  the image of producer who is waiting while the buffer is full and consumer consuming
+
                 }
                 else if(Main.producerStatus.getValue() == R.PRODUCER_WAIT && Main.isBufferFull.getValue() == true && Main.consumerStatus.getValue() == R.CONSUMER_CONSUME){
-                    updateToNotProduceFullConsume();
+                    updateToNotProduceFullConsume(); // this calls the function to shows  the image of producer who stopped producing while the buffer is full and consumer consuming
+
                 }
                 else{
                     return;
@@ -86,7 +88,11 @@ public class ProducerConsumerG extends Application {
     }
     public static void main(String[] args) {
         launch(args);
-    }
+    }//main function
+
+    /* These are the functions that updates the views in our layout by changing the shown images*/
+
+
     public void updateToProduceEmptyWait(){
         ImageView produceEmptyWait = new ImageView(new Image("images/produce_empty_wait.png"));
         produceEmptyWait.setFitHeight(height);
@@ -151,6 +157,10 @@ public class ProducerConsumerG extends Application {
             }
         });
     }
+    /*ENd of the views updaters*/
+
+
+    //Function that updates the consumer label to match with how the stuation is
     public void changeConsumerMessage(String newMessage){
         Platform.runLater(new Runnable() {
             @Override
@@ -159,6 +169,7 @@ public class ProducerConsumerG extends Application {
             }
         });
     }
+    //Function that updates the producer label to match with how the stuation is
     public void changeProducerMessage(String newMessage){
         Platform.runLater(new Runnable() {
             @Override

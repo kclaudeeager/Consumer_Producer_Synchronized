@@ -1,5 +1,5 @@
 package main;
-
+//Interface tha contains all status available
 public interface R {
     String PRODUCER_PRODUCES = "PRODUCER_PRODUCES";
     String PRODUCER_WAIT = "PRODUCER_WAIT";
